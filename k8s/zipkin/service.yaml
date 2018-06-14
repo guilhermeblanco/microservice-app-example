@@ -4,6 +4,7 @@ metadata:
   labels:
     app: microservice-app-example
   name: zipkin
+  namespace: team5
 spec:
   ports:
   - port: 9411

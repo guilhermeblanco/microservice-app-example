@@ -4,6 +4,7 @@ metadata:
   labels:
     app: microservice-app-example
   name: zipkin
+  namespace: team5
 spec:
   replicas: 1
   template:
@@ -12,6 +13,7 @@ spec:
         app: microservice-app-example
         service: zipkin
     spec:
+      restartPolicy: Always
       containers:
       - env:
         image: openzipkin/zipkin
@@ -19,4 +21,23 @@ spec:
         ports:
         - containerPort: 9411
         - containerPort: 9410
-      restartPolicy: Always
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: 9411
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: 9411
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 1
